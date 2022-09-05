@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.webp" alt="logo" />
+  <img src="assets/strago.webp" alt="logo" />
 </p>
 
 <h1 align="center">
