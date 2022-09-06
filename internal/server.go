@@ -10,6 +10,14 @@ import (
 type server struct {
 }
 
+type LoadBalancer interface {
+	Start(int) error
+}
+
+func NewServer() LoadBalancer {
+	return &server{}
+}
+
 func (s *server) Start(port int) error {
 	address := ":" + strconv.Itoa(port)
 	app := gin.Default()
