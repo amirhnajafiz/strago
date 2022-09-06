@@ -1,7 +1,11 @@
 package internal
 
-import "net/http"
+import (
+	"net/http"
 
-func handleRequests(writer http.ResponseWriter, request *http.Request) {
-	_, _ = writer.Write([]byte(request.URL.String()))
+	"github.com/gin-gonic/gin"
+)
+
+func handleRequests(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, ctx.Request)
 }
