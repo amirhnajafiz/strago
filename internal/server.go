@@ -10,11 +10,7 @@ import (
 type server struct {
 }
 
-type LoadBalancer interface {
-	Start(int) error
-}
-
-func NewServer() LoadBalancer {
+func NewServer() *server {
 	return &server{}
 }
 

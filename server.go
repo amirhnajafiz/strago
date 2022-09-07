@@ -1,13 +1,15 @@
 package strago
 
 import (
-	"log"
-
 	"github.com/amirhnajafiz/strago/internal"
 )
 
-func NewServer() {
+type LoadBalancer interface {
+	Start(int) error
+}
+
+func NewServer() LoadBalancer {
 	server := internal.NewServer()
 
-	log.Println(server.Start(8080))
+	return server
 }
