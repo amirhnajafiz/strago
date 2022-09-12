@@ -8,14 +8,21 @@ import (
 )
 
 type server struct {
+	enabled  bool
+	port     int
+	services []string
 }
 
-func NewServer() *server {
-	return &server{}
+func NewServer(enabled bool, port int, services []string) *server {
+	return &server{
+		enabled:  enabled,
+		port:     port,
+		services: services,
+	}
 }
 
-func (s *server) Start(port int) error {
-	address := ":" + strconv.Itoa(port)
+func (s *server) Start() error {
+	address := ":" + strconv.Itoa(s.port)
 	app := gin.Default()
 
 	gin.SetMode(gin.ReleaseMode)

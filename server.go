@@ -5,11 +5,11 @@ import (
 )
 
 type LoadBalancer interface {
-	Start(int) error
+	Start() error
 }
 
-func NewServer() LoadBalancer {
-	server := internal.NewServer()
+func NewServer(cfg Config) LoadBalancer {
+	server := internal.NewServer(cfg.Enable, cfg.Port, cfg.Services)
 
 	return server
 }
