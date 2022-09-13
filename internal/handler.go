@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func handleRequests(ctx *gin.Context) {
+func (s *server) handleRequests(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, ctx.Request)
 }

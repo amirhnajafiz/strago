@@ -26,7 +26,7 @@ func (s *server) Start() error {
 	app := gin.Default()
 
 	gin.SetMode(gin.ReleaseMode)
-	app.Use(handleRequests)
+	app.Use(s.handleRequests)
 
 	if err := app.Run(address); err != nil {
 		return fmt.Errorf("register server failed: %w", err)
