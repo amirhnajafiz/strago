@@ -10,7 +10,7 @@ type LoadBalancer interface {
 	Close(ip string) error
 }
 
-func NewServer(cfg Config) LoadBalancer {
+func NewServer(cfg *Config) LoadBalancer {
 	server := internal.NewServer(cfg.Enable, cfg.Port, cfg.Type, cfg.Services...)
 
 	return server
