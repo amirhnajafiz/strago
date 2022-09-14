@@ -8,16 +8,18 @@ import (
 )
 
 type server struct {
-	enabled  bool
-	port     int
-	services []*service
+	enabled     bool
+	port        int
+	services    []*service
+	serviceType string
 }
 
-func NewServer(enabled bool, port int, services []string) *server {
+func NewServer(enabled bool, port int, serviceType string, services ...string) *server {
 	return &server{
-		enabled:  enabled,
-		port:     port,
-		services: createServices(services),
+		enabled:     enabled,
+		port:        port,
+		services:    createServices(services),
+		serviceType: serviceType,
 	}
 }
 

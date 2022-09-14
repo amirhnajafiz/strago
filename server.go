@@ -9,7 +9,7 @@ type LoadBalancer interface {
 }
 
 func NewServer(cfg Config) LoadBalancer {
-	server := internal.NewServer(cfg.Enable, cfg.Port, cfg.Services)
+	server := internal.NewServer(cfg.Enable, cfg.Port, cfg.Type, cfg.Services...)
 
 	return server
 }
