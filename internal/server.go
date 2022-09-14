@@ -29,6 +29,18 @@ func NewServer(enabled bool, port int, serviceType string, services ...string) *
 	}
 }
 
+func (s *server) Open(ip string) error {
+	for _, service := range s.services {
+		if service.ip == ip {
+			service.enable = true
+
+			return nil
+		}
+	}
+
+	return fmt.Errorf("service not found")
+}
+
 func (s *server) Start() error {
 	address := ":" + strconv.Itoa(s.port)
 	app := gin.Default()

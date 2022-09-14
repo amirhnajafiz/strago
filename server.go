@@ -6,6 +6,8 @@ import (
 
 type LoadBalancer interface {
 	Start() error
+	Open(ip string) error
+	Close(ip string) error
 }
 
 func NewServer(cfg Config) LoadBalancer {
