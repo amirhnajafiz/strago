@@ -29,16 +29,24 @@ func NewServer(enabled bool, port int, serviceType string, services ...string) *
 	}
 }
 
-func (s *server) Open(ip string) error {
+func (s *server) toggle(ip string, status bool) error {
 	for _, service := range s.services {
 		if service.ip == ip {
-			service.enable = true
+			service.enable = status
 
 			return nil
 		}
 	}
 
 	return fmt.Errorf("service not found")
+}
+
+func (s *server) Open(ip string) error {
+	return s.toggle(ip, true)
+}
+
+func (s *server) Close(ip string) error {
+	return s.toggle(ip, false)
 }
 
 func (s *server) Start() error {
