@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"log"
 	"net/http"
 	"sort"
 
@@ -27,7 +26,9 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	}
 
 	ip := s.getIP()
-	log.Printf("receieved ip: %s", ip)
+
+	req := ctx.Request
+	_ = "http://" + ip + req.URL.Path
 
 	ctx.JSON(http.StatusOK, ctx.Request)
 }
