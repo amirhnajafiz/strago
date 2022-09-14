@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"log"
 	"net/http"
 	"sort"
 
@@ -18,5 +19,13 @@ func (s *server) getIP() string {
 }
 
 func (s *server) handleRequests(ctx *gin.Context) {
+	// check service enable/disable status
+	if !s.enabled {
+		ctx.Status(http.StatusNotFound)
+	}
+
+	ip := s.getIP()
+	log.Printf("receieved ip: %s", ip)
+
 	ctx.JSON(http.StatusOK, ctx.Request)
 }
