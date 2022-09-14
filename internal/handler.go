@@ -9,13 +9,15 @@ import (
 )
 
 func (s *server) getIP() string {
-	ip := s.services[0]
+	serv := s.services[0]
+
+	serv.used++
 
 	sort.Slice(s.services, func(i, j int) bool {
-		return i < j
+		return s.services[i].used < s.services[j].used
 	})
 
-	return ip
+	return serv.ip
 }
 
 func (s *server) handleRequests(ctx *gin.Context) {

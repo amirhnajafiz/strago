@@ -10,14 +10,14 @@ import (
 type server struct {
 	enabled  bool
 	port     int
-	services []string
+	services []*service
 }
 
 func NewServer(enabled bool, port int, services []string) *server {
 	return &server{
 		enabled:  enabled,
 		port:     port,
-		services: services,
+		services: createServices(services),
 	}
 }
 
