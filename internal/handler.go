@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -20,5 +21,28 @@ func (s *server) handleRequests(ctx *gin.Context) {
 
 	s.logger.Info("new url", zap.String("uri", uri))
 
-	ctx.JSON(http.StatusOK, ctx.Request)
+	res, err := s.handle(uri, req)
+	if err != nil {
+		ctx.Status(res.StatusCode)
+		_ = ctx.Error(err)
+
+		return
+	}
+
+	ctx.JSON(res.StatusCode, res)
+}
+
+func (s *server) handle(uri string, req *http.Request) (*http.Response, error) {
+	switch req.Method {
+	case http.MethodGet:
+		return s.http.Get(uri)
+	case http.MethodPost:
+		return s.http.Post(uri, req.Body)
+	case http.MethodPut:
+		return s.http.Put(uri, req.Body)
+	case http.MethodDelete:
+		return s.http.Delete(uri)
+	default:
+		return nil, fmt.Errorf("unsupported protocol")
+	}
 }

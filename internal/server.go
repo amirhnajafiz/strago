@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/amirhnajafiz/strago/pkg/http_client"
 	"github.com/amirhnajafiz/strago/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -11,6 +12,7 @@ import (
 
 type server struct {
 	enabled     bool
+	http        http_client.HTTPClient
 	logger      *zap.Logger
 	port        int
 	services    []*service
