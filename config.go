@@ -7,6 +7,14 @@ type Config struct {
 	Type     string
 }
 
+func ProductionConfigs() *Config {
+	return &Config{
+		Enable: true,
+		Port:   9370,
+		Type:   "https",
+	}
+}
+
 func WithDefaultConfigs() *Config {
 	return &Config{
 		Enable: false,
