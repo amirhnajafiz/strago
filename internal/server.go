@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/amirhnajafiz/strago/pkg/logger"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type server struct {
 	enabled     bool
+	logger      *zap.Logger
 	port        int
 	services    []*service
 	serviceType string
@@ -17,6 +20,7 @@ type server struct {
 func NewServer(enabled bool, port int, serviceType string, services ...string) *server {
 	return &server{
 		enabled:     enabled,
+		logger:      logger.NewLogger(),
 		port:        port,
 		services:    createServices(services),
 		serviceType: serviceType,

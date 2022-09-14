@@ -1,11 +1,11 @@
 package internal
 
 import (
-	"log"
 	"net/http"
 	"sort"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func (s *server) getIP() string {
@@ -31,7 +31,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	req := ctx.Request
 	uri := s.serviceType + "://" + ip + req.URL.Path
 
-	log.Printf("got url: %s", uri)
+	s.logger.Info("new url", zap.String("uri", uri))
 
 	ctx.JSON(http.StatusOK, ctx.Request)
 }
