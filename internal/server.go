@@ -12,7 +12,7 @@ import (
 
 type server struct {
 	enabled     bool
-	http        http_client.HTTPClient
+	http        *http_client.HTTPClient
 	logger      *zap.Logger
 	port        int
 	services    []*service
@@ -22,6 +22,7 @@ type server struct {
 func NewServer(enabled bool, port int, serviceType string, services ...string) *server {
 	return &server{
 		enabled:     enabled,
+		http:        http_client.New(),
 		logger:      logger.NewLogger(),
 		port:        port,
 		services:    createServices(services),

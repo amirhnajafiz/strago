@@ -29,7 +29,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(res.StatusCode, res)
+	ctx.Status(res.StatusCode)
 }
 
 func (s *server) handle(uri string, req *http.Request) (*http.Response, error) {
