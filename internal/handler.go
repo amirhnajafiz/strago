@@ -35,7 +35,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Status(res.StatusCode)
+	ctx.JSON(res.StatusCode, res.Body)
 }
 
 // handle
