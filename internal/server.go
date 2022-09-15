@@ -40,9 +40,10 @@ func NewServer(
 		enabled:     enabled,
 		port:        port,
 		serviceType: serviceType,
-		http:        http_client.New(),
-		logger:      logger.NewLogger(),
-		services:    createServices(services),
+
+		http:     http_client.NewClient(),
+		logger:   logger.NewLogger(),
+		services: generateServicesFromGiven(services),
 	}
 }
 

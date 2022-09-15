@@ -13,9 +13,9 @@ type HTTPClient struct {
 	client *http.Client
 }
 
-// New
+// NewClient
 // creating a new http client.
-func New() *HTTPClient {
+func NewClient() *HTTPClient {
 	return &HTTPClient{
 		client: &http.Client{},
 	}

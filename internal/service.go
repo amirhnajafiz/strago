@@ -1,26 +1,34 @@
 package internal
 
-import "log"
+import "time"
 
+// service
+// keeps the data of a service that
+// has been given to strago.
 type service struct {
+	// enable/disable service.
 	enable bool
-	ip     string
-	used   int
+	// service ip.
+	ip string
+	// number of requests that are sent to this service.
+	used int
+	// busy time of this service
+	busy time.Duration
 }
 
-func createServices(services []string) []*service {
+// generateServicesFromGiven
+// creates the list of the services.
+func generateServicesFromGiven(services []string) []*service {
 	list := make([]*service, len(services))
 
-	for index, s := range services {
+	for index, ip := range services {
 		list[index] = &service{
 			enable: true,
-			ip:     s,
+			ip:     ip,
 			used:   0,
+			busy:   0,
 		}
 	}
-
-	log.Println(len(list))
-	log.Println(len(services))
 
 	return list
 }
