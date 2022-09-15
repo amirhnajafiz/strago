@@ -46,19 +46,25 @@ func NewServer(
 	}
 }
 
+// Open
+// allow strago to send requests to a service.
 func (s *server) Open(ip string) error {
 	return s.changeStatusForAService(ip, true)
 }
 
+// Close
+// disallow strago to send requests to a service.
 func (s *server) Close(ip string) error {
 	return s.changeStatusForAService(ip, false)
 }
 
+// Start
+// starting strago server.
 func (s *server) Start() error {
-	address := ":" + strconv.Itoa(s.port)
-
+	// change gin mode
 	gin.SetMode(gin.ReleaseMode)
 
+	address := ":" + strconv.Itoa(s.port)
 	app := gin.Default()
 
 	app.Use(s.handleRequests)
