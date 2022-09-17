@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/amirhnajafiz/strago/pkg/http_client"
 	"github.com/amirhnajafiz/strago/pkg/logger"
@@ -60,6 +61,34 @@ func (s *server) Open(ip string) error {
 // disallow strago to send requests to a service.
 func (s *server) Close(ip string) error {
 	return s.changeStatusForAService(ip, false)
+}
+
+// BanIP
+// adds an IP into blacklist of our service.
+func (s *server) BanIP(ip string) error {
+	for _, part := range strings.Split(ip, ".") {
+		if _, err := strconv.Atoi(part); err != nil && part != "*" {
+			return fmt.Errorf("wrong ip format")
+		}
+	}
+
+	s.blacklist = append(s.blacklist, ip)
+
+	return nil
+}
+
+// RecoverIP
+// removes an IP from server blacklist.
+func (s *server) RecoverIP(ip string) error {
+	for index, blackListIP := range s.blacklist {
+		if blackListIP == ip {
+			s.blacklist = append(s.blacklist[:index], s.blacklist[index+1:]...)
+
+			return nil
+		}
+	}
+
+	return fmt.Errorf("ip not found")
 }
 
 // Start
