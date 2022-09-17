@@ -100,7 +100,8 @@ func (s *server) Start() error {
 	address := ":" + strconv.Itoa(s.port)
 	app := gin.Default()
 
-	app.Use(s.handleRequests)
+	v1 := app.Use(s.firewallHandler)
+	v1.Use(s.handleRequests)
 
 	if err := app.Run(address); err != nil {
 		return fmt.Errorf("register server failed: %w", err)

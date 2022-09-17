@@ -12,6 +12,8 @@ import (
 // handles the requests that are sent to service.
 func (s *server) firewallHandler(ctx *gin.Context) {
 	if s.checkIPRangeInBlackList(ctx.ClientIP()) {
+		s.logger.Warn("request from blacklist ip blocked", zap.String("ip", ctx.ClientIP()))
+
 		_ = ctx.Error(fmt.Errorf("blocked by firewall"))
 
 		return
@@ -25,6 +27,8 @@ func (s *server) firewallHandler(ctx *gin.Context) {
 func (s *server) handleRequests(ctx *gin.Context) {
 	// check service enable/disable status
 	if !s.enabled {
+		s.logger.Warn("request arrived when service was closed")
+
 		ctx.Status(http.StatusNotFound)
 	}
 
@@ -40,6 +44,8 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	// handle the request with new uri
 	res, err := s.handle(uri, req)
 	if err != nil {
+		s.logger.Error("handle request failed", zap.Error(err))
+
 		_ = ctx.Error(err)
 
 		return
