@@ -20,6 +20,9 @@ type server struct {
 	// server port.
 	port int
 
+	// blacklist ips for firewall
+	blacklist []string
+
 	// http client instance.
 	http *http_client.HTTPClient
 	// logger instance.
