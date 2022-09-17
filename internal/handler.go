@@ -28,15 +28,13 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	// handle the request with new uri
 	res, err := s.handle(uri, req)
 	if err != nil {
-		ctx.Status(res.StatusCode)
-
 		_ = ctx.Error(err)
 
 		return
 	}
 
 	// creating a buffer for body
-	var buffer []byte
+	buffer := make([]byte, 2048)
 	_, _ = res.Body.Read(buffer)
 
 	// sending the service response
