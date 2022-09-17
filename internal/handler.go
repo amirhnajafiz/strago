@@ -35,7 +35,13 @@ func (s *server) handleRequests(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(res.StatusCode, res.Body)
+	// creating a buffer for body
+	var buffer []byte
+	_, _ = res.Body.Read(buffer)
+
+	// sending the service response
+	ctx.Status(res.StatusCode)
+	_, _ = ctx.Writer.Write(buffer)
 }
 
 // handle
