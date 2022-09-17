@@ -103,6 +103,8 @@ func (s *server) Start() error {
 	v1 := app.Use(s.firewallHandler)
 	v1.Use(s.handleRequests)
 
+	s.logger.Info("load balancer started", zap.String("port", address))
+
 	if err := app.Run(address); err != nil {
 		return fmt.Errorf("register server failed: %w", err)
 	}
