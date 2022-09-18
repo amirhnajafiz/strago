@@ -66,6 +66,34 @@ func (ipm *ipManager) getIPv6Parts(ip string) []string {
 	return strings.Split(ip, ipV6Separator)
 }
 
+// validateIPv4
+// custom validation for IP version 4.
+func (ipm *ipManager) validateIPv4(ip string) bool {
+	success := 0
+
+	for _, part := range ipm.getIPv6Parts(ip) {
+		if part == "*" || govalidator.IsNumeric(part) {
+			success++
+		}
+	}
+
+	return success == 4
+}
+
+// validateIPv6
+// custom validation for IP version 6.
+func (ipm *ipManager) validateIPv6(ip string) bool {
+	success := 0
+
+	for _, part := range ipm.getIPv6Parts(ip) {
+		if part == "*" || govalidator.IsHexadecimal(ip) {
+			success++
+		}
+	}
+
+	return success == 8
+}
+
 // addToBlacklist
 // add on ip to blacklist based on its version.
 func (ipm *ipManager) addToBlacklist(ip string) bool {
