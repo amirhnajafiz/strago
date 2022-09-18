@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/amirhnajafiz/strago/pkg/http_client"
 	"github.com/amirhnajafiz/strago/pkg/logger"
@@ -21,8 +20,8 @@ type server struct {
 	// server port.
 	port int
 
-	// blacklist ips for firewall
-	blacklist []string
+	// ipManager is for firewall ips handling.
+	ipManager ipManager
 
 	// http client instance.
 	http *http_client.HTTPClient
@@ -45,6 +44,8 @@ func NewServer(
 		port:        port,
 		serviceType: serviceType,
 
+		ipManager: ipManager{},
+
 		http:     http_client.NewClient(),
 		logger:   logger.NewLogger(),
 		services: generateServicesFromGiven(services),
@@ -66,13 +67,9 @@ func (s *server) Close(ip string) error {
 // BanIP
 // adds an IP into blacklist of our service.
 func (s *server) BanIP(ip string) error {
-	for _, part := range strings.Split(ip, ".") {
-		if _, err := strconv.Atoi(part); err != nil && part != "*" {
-			return fmt.Errorf("wrong ip format")
-		}
+	if !s.ipManager.addToBlacklist(ip) {
+		return fmt.Errorf("wrong ip format")
 	}
-
-	s.blacklist = append(s.blacklist, ip)
 
 	return nil
 }
@@ -80,12 +77,8 @@ func (s *server) BanIP(ip string) error {
 // RecoverIP
 // removes an IP from server blacklist.
 func (s *server) RecoverIP(ip string) error {
-	for index, blackListIP := range s.blacklist {
-		if blackListIP == ip {
-			s.blacklist = append(s.blacklist[:index], s.blacklist[index+1:]...)
-
-			return nil
-		}
+	if s.ipManager.removeFromBlacklist(ip) {
+		return nil
 	}
 
 	return fmt.Errorf("ip not found")
