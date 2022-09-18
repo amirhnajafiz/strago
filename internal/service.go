@@ -15,20 +15,3 @@ type service struct {
 	// busy time of this service
 	busy time.Duration
 }
-
-// generateServicesFromGiven
-// creates the list of the services.
-func generateServicesFromGiven(services []string) []*service {
-	list := make([]*service, len(services))
-
-	for index, ip := range services {
-		list[index] = &service{
-			enable: true,
-			ip:     ip,
-			used:   0,
-			busy:   0,
-		}
-	}
-
-	return list
-}
