@@ -65,3 +65,49 @@ func (ipm *ipManager) getIPv4Parts(ip string) []string {
 func (ipm *ipManager) getIPv6Parts(ip string) []string {
 	return strings.Split(ip, ipV6Separator)
 }
+
+// addToBlacklist
+// add on ip to blacklist based on its version.
+func (ipm *ipManager) addToBlacklist(ip string) bool {
+	switch ipm.genericIPType(ip) {
+	case ipV6:
+		ipm.ipV6List = append(ipm.ipV6List, ip)
+
+		return true
+	case ipV4:
+		ipm.ipV4List = append(ipm.ipV4List, ip)
+
+		return true
+	}
+
+	return false
+}
+
+// removeFromBlacklist
+// removing a given ip from blacklist.
+func (ipm *ipManager) removeFromBlacklist(ip string) bool {
+	var result bool
+
+	switch ipm.genericIPType(ip) {
+	case ipV6:
+		ipm.ipV6List, result = removeFromList(ipm.ipV6List, ip)
+	case ipV4:
+		ipm.ipV4List, result = removeFromList(ipm.ipV4List, ip)
+	}
+
+	return result
+}
+
+// removeFromList
+// gets a list and removes one given item from it, if it exists.
+func removeFromList(list []string, ip string) ([]string, bool) {
+	for index, item := range list {
+		if item == ip {
+			list = append(list, list[index+1:]...)
+
+			return list, true
+		}
+	}
+
+	return list, false
+}
