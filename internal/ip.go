@@ -99,10 +99,18 @@ func (ipm *ipManager) validateIPv6(ip string) bool {
 func (ipm *ipManager) addToBlacklist(ip string) bool {
 	switch ipm.genericIPType(ip) {
 	case ipV6:
+		if !ipm.validateIPv6(ip) {
+			return false
+		}
+
 		ipm.ipV6List = append(ipm.ipV6List, ip)
 
 		return true
 	case ipV4:
+		if !ipm.validateIPv4(ip) {
+			return false
+		}
+
 		ipm.ipV4List = append(ipm.ipV4List, ip)
 
 		return true
