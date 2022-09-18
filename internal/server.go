@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/amirhnajafiz/strago/pkg/http_client"
 	"github.com/amirhnajafiz/strago/pkg/logger"
@@ -67,41 +66,19 @@ func (s *server) Close(ip string) error {
 
 // BanIP
 // adds an IP into blacklist of our service.
-func (s *server) BanIP(ip string, version ...int) error {
-	separator := "."
-
-	if version[0] == 0 {
-		version[0] = 4
+func (s *server) BanIP(ip string) error {
+	if !s.ipManager.addToBlacklist(ip) {
+		return fmt.Errorf("wrong ip format")
 	}
-
-	if version[0] == 6 {
-		separator = ":"
-	}
-
-	for _, part := range strings.Split(ip, separator) {
-		if _, err := strconv.Atoi(part); err != nil && part != "*" {
-			return fmt.Errorf("wrong ip format")
-		}
-	}
-
-	s.blacklist[version[0]] = append(s.blacklist[version[0]], ip)
 
 	return nil
 }
 
 // RecoverIP
 // removes an IP from server blacklist.
-func (s *server) RecoverIP(ip string, version ...int) error {
-	if version[0] == 0 {
-		version[0] = 4
-	}
-
-	for index, blackListIP := range s.blacklist[version[0]] {
-		if blackListIP == ip {
-			s.blacklist[version[0]] = append(s.blacklist[version[0]][:index], s.blacklist[version[0]][index+1:]...)
-
-			return nil
-		}
+func (s *server) RecoverIP(ip string) error {
+	if s.ipManager.removeFromBlacklist(ip) {
+		return nil
 	}
 
 	return fmt.Errorf("ip not found")
