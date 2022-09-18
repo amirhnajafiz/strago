@@ -15,9 +15,9 @@ type LoadBalancer interface {
 	// Close one of the services.
 	Close(ip string) error
 	// BanIP into blacklist.
-	BanIP(ip string) error
+	BanIP(ip string, version ...int) error
 	// RecoverIP from blacklist.
-	RecoverIP(ip string) error
+	RecoverIP(ip string, version ...int) error
 }
 
 // NewServer
