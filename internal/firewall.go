@@ -60,5 +60,18 @@ func (s *server) handleIPv4(ip string) bool {
 // handleIPv6
 // handles the requests with client ip version 6.
 func (s *server) handleIPv6(ip string) bool {
-	return ip == ""
+	match := 0
+
+	for _, blackListIP := range s.blacklist {
+		ipParts := strings.Split(ip, ":")
+		blackIPParts := strings.Split(blackListIP, ":")
+
+		for index, part := range ipParts {
+			if blackIPParts[index] == "*" || blackIPParts[index] == part {
+				match++
+			}
+		}
+	}
+
+	return match == 8
 }
