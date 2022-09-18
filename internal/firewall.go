@@ -2,14 +2,6 @@ package internal
 
 import (
 	"strings"
-
-	"github.com/asaskevich/govalidator"
-)
-
-const (
-	ipV6          = 6
-	ipV4          = 4
-	unsupportedIp = 0
 )
 
 // checkIPRangeInBlackList
@@ -24,18 +16,6 @@ func (s *server) checkIPRangeInBlackList(ip string) bool {
 	}
 
 	return false
-}
-
-// ipType
-// manages to find the ip version of a given ip.
-func ipType(ip string) int {
-	if govalidator.IsIPv6(ip) {
-		return ipV6
-	} else if govalidator.IsIPv4(ip) {
-		return ipV4
-	} else {
-		return unsupportedIp
-	}
 }
 
 // handleIPv4

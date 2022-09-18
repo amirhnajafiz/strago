@@ -21,8 +21,8 @@ type server struct {
 	// server port.
 	port int
 
-	// blacklist ips for firewall
-	blacklist map[int][]string
+	// ipManager is for firewall ips handling.
+	ipManager ipManager
 
 	// http client instance.
 	http *http_client.HTTPClient
@@ -45,7 +45,7 @@ func NewServer(
 		port:        port,
 		serviceType: serviceType,
 
-		blacklist: make(map[int][]string),
+		ipManager: ipManager{},
 
 		http:     http_client.NewClient(),
 		logger:   logger.NewLogger(),
