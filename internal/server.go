@@ -22,7 +22,7 @@ type server struct {
 	port int
 
 	// blacklist ips for firewall
-	blacklist []string
+	blacklist map[int][]string
 
 	// http client instance.
 	http *http_client.HTTPClient
@@ -45,6 +45,8 @@ func NewServer(
 		port:        port,
 		serviceType: serviceType,
 
+		blacklist: make(map[int][]string),
+
 		http:     http_client.NewClient(),
 		logger:   logger.NewLogger(),
 		services: generateServicesFromGiven(services),
@@ -65,24 +67,38 @@ func (s *server) Close(ip string) error {
 
 // BanIP
 // adds an IP into blacklist of our service.
-func (s *server) BanIP(ip string) error {
-	for _, part := range strings.Split(ip, ".") {
+func (s *server) BanIP(ip string, version ...int) error {
+	separator := "."
+
+	if version[0] == 0 {
+		version[0] = 4
+	}
+
+	if version[0] == 6 {
+		separator = ":"
+	}
+
+	for _, part := range strings.Split(ip, separator) {
 		if _, err := strconv.Atoi(part); err != nil && part != "*" {
 			return fmt.Errorf("wrong ip format")
 		}
 	}
 
-	s.blacklist = append(s.blacklist, ip)
+	s.blacklist[version[0]] = append(s.blacklist[version[0]], ip)
 
 	return nil
 }
 
 // RecoverIP
 // removes an IP from server blacklist.
-func (s *server) RecoverIP(ip string) error {
-	for index, blackListIP := range s.blacklist {
+func (s *server) RecoverIP(ip string, version ...int) error {
+	if version[0] == 0 {
+		version[0] = 4
+	}
+
+	for index, blackListIP := range s.blacklist[version[0]] {
 		if blackListIP == ip {
-			s.blacklist = append(s.blacklist[:index], s.blacklist[index+1:]...)
+			s.blacklist[version[0]] = append(s.blacklist[version[0]][:index], s.blacklist[version[0]][index+1:]...)
 
 			return nil
 		}
