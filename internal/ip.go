@@ -47,7 +47,7 @@ func (ipm *ipManager) genericIPType(ip string) int {
 	}
 
 	parts = strings.Split(ip, ipV6Separator)
-	if len(parts) == 6 {
+	if len(parts) == 8 {
 		return ipV6
 	}
 
@@ -71,7 +71,7 @@ func (ipm *ipManager) getIPv6Parts(ip string) []string {
 func (ipm *ipManager) validateIPv4(ip string) bool {
 	success := 0
 
-	for _, part := range ipm.getIPv6Parts(ip) {
+	for _, part := range ipm.getIPv4Parts(ip) {
 		if part == "*" || govalidator.IsNumeric(part) {
 			success++
 		}
@@ -86,7 +86,7 @@ func (ipm *ipManager) validateIPv6(ip string) bool {
 	success := 0
 
 	for _, part := range ipm.getIPv6Parts(ip) {
-		if part == "*" || govalidator.IsHexadecimal(ip) {
+		if govalidator.IsHexadecimal(part) || part == "*" {
 			success++
 		}
 	}
