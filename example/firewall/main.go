@@ -23,6 +23,9 @@ func main() {
 		panic(err)
 	}
 
+	// allow requests passing
+	server.Enable()
+
 	if err := server.Start(); err != nil {
 		panic(err)
 	}

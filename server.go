@@ -10,6 +10,10 @@ import (
 type LoadBalancer interface {
 	// Start server.
 	Start() error
+	// Enable load balancing server.
+	Enable()
+	// Disable load balancing server.
+	Disable()
 	// Open one of the services.
 	Open(ip string) error
 	// Close one of the services.

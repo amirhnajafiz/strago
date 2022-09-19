@@ -52,6 +52,18 @@ func NewServer(
 	}
 }
 
+// Enable
+// allow load balancing server to pass requests.
+func (s *server) Enable() {
+	s.enabled = true
+}
+
+// Disable
+// block all the requests that are sent to server.
+func (s *server) Disable() {
+	s.enabled = false
+}
+
 // Open
 // allow strago to send requests to a service.
 func (s *server) Open(ip string) error {
