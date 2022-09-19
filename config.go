@@ -17,7 +17,7 @@ type Config struct {
 // returns a default config set of strago.
 func WithDefaultConfigs() *Config {
 	return &Config{
-		Enable: false,
+		Enable: true,
 		Port:   9370,
 		Type:   "http",
 	}
