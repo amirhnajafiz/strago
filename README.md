@@ -44,6 +44,25 @@ func main() {
 }
 ```
 
+### Firewall
+You can ban any ip range (IPv4 or IPv6):
+```go
+...
+// ban any ip in range 127... version 4
+if err := server.BanIP("127.*.*.*"); err != nil {
+    panic(err)
+}
+
+// ban any ip in range 12...12 version 6
+if err := server.BanIP("12:*:*:*:22:*:*:*"); err != nil {
+    panic(err)
+}
+
+// allow requests passing
+server.Enable()
+...
+```
+
 ### Test
 You can test the above code by creating two _echo servers_:
 ```shell
