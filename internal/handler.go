@@ -30,6 +30,8 @@ func (s *server) handleRequests(ctx *gin.Context) {
 		s.logger.Warn("request arrived when service was closed")
 
 		ctx.Status(http.StatusNotFound)
+
+		return
 	}
 
 	// load-balancing logic
