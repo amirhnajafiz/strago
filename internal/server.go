@@ -23,6 +23,8 @@ type server struct {
 	// balancing type.
 	balancingType int
 
+	// metrics of the server.
+	metrics metrics
 	// http client instance.
 	http *http_client.HTTPClient
 	// logger instance.
@@ -47,6 +49,7 @@ func NewServer(
 
 		balancingType: balancingType,
 
+		metrics:  newMetrics(),
 		http:     http_client.NewClient(),
 		logger:   logger.NewLogger(),
 		services: generateServicesFromGiven(services),
