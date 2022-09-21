@@ -8,20 +8,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// firewallHandler
-// handles the requests that are sent to service.
-func (s *server) firewallHandler(ctx *gin.Context) {
-	if s.checkIPRangeInBlackList(ctx.ClientIP()) {
-		s.logger.Warn("request from blacklist ip blocked", zap.String("ip", ctx.ClientIP()))
-
-		_ = ctx.Error(fmt.Errorf("blocked by firewall"))
-
-		return
-	}
-
-	ctx.Next()
-}
-
 // handleRequests
 // gets user inputs and processes them.
 func (s *server) handleRequests(ctx *gin.Context) {

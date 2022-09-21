@@ -20,9 +20,6 @@ type server struct {
 	// server port.
 	port int
 
-	// ipManager is for firewall ips handling.
-	ipManager ipManager
-
 	// http client instance.
 	http *http_client.HTTPClient
 	// logger instance.
@@ -43,8 +40,6 @@ func NewServer(
 		enabled:     enabled,
 		port:        port,
 		serviceType: serviceType,
-
-		ipManager: ipManager{},
 
 		http:     http_client.NewClient(),
 		logger:   logger.NewLogger(),
@@ -76,26 +71,6 @@ func (s *server) Close(ip string) error {
 	return s.changeStatusForAService(ip, false)
 }
 
-// BanIP
-// adds an IP into blacklist of our service.
-func (s *server) BanIP(ip string) error {
-	if !s.ipManager.addToBlacklist(ip) {
-		return fmt.Errorf("wrong ip format")
-	}
-
-	return nil
-}
-
-// RecoverIP
-// removes an IP from server blacklist.
-func (s *server) RecoverIP(ip string) error {
-	if s.ipManager.removeFromBlacklist(ip) {
-		return nil
-	}
-
-	return fmt.Errorf("ip not found")
-}
-
 // Start
 // starting strago server.
 func (s *server) Start() error {
@@ -105,8 +80,7 @@ func (s *server) Start() error {
 	address := ":" + strconv.Itoa(s.port)
 	app := gin.Default()
 
-	v1 := app.Use(s.firewallHandler)
-	v1.Use(s.handleRequests)
+	app.Use(s.handleRequests)
 
 	s.logger.Info("load balancer started", zap.String("port", address))
 
