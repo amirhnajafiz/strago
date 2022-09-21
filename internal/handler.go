@@ -23,6 +23,13 @@ func (s *server) handleRequests(ctx *gin.Context) {
 
 	// load-balancing logic
 	ip := s.getOneIPFromServices()
+	if ip == "" {
+		s.logger.Warn("all services are disabled")
+
+		_ = ctx.Error(fmt.Errorf("services are closed at the moment"))
+
+		return
+	}
 
 	// extract request and create a new address
 	req := ctx.Request
