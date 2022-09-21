@@ -19,9 +19,10 @@ type Config struct {
 // returns a default config set of strago.
 func WithDefaultConfigs() *Config {
 	return &Config{
-		Enable: false,
-		Port:   9370,
-		Type:   "http",
+		Enable:        false,
+		Port:          9370,
+		Type:          "http",
+		BalancingType: RequestsCount,
 	}
 }
 
@@ -29,9 +30,10 @@ func WithDefaultConfigs() *Config {
 // returns a set of configs for production of strago server.
 func ProductionConfigs() *Config {
 	return &Config{
-		Enable: true,
-		Port:   9370,
-		Type:   "https",
+		Enable:        true,
+		Port:          9370,
+		Type:          "https",
+		BalancingType: BusyTime,
 	}
 }
 
