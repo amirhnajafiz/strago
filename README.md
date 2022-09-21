@@ -8,7 +8,7 @@ Strago
 
 <p align="center">
     <img src="https://img.shields.io/badge/Go-1.19+-00ADD8?style=for-the-badge&logo=go" alt="go version" />
-    <img src="https://img.shields.io/badge/Version-0.0.5-green?style=for-the-badge&logo=none" alt="version" />
+    <img src="https://img.shields.io/badge/Version-0.0.6-green?style=for-the-badge&logo=none" alt="version" />
 </p>
 
 Simple traffic controller agent with Golang. With **Strago** you can create and config a load balancer
@@ -57,3 +57,6 @@ Now you can test the load-balancer:
 ```shell
 curl localhost:9370
 ```
+
+### Metrics
+You can get prometheus metrics from ```localhost:9370/metrics```.
