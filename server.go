@@ -26,6 +26,7 @@ func NewServer(cfg *Config) LoadBalancer {
 	server := internal.NewServer(
 		cfg.Enable,
 		cfg.Port,
+		cfg.BalancingType,
 		cfg.Type,
 		cfg.Services...,
 	)

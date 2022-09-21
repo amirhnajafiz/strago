@@ -11,6 +11,8 @@ type Config struct {
 	Services []string
 	// Service Type which can be http or https.
 	Type string
+	// BalancingType selects the parameter to balance services.
+	BalancingType int
 }
 
 // WithDefaultConfigs

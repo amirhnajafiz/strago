@@ -20,6 +20,9 @@ type server struct {
 	// server port.
 	port int
 
+	// balancing type.
+	balancingType int
+
 	// http client instance.
 	http *http_client.HTTPClient
 	// logger instance.
@@ -33,6 +36,7 @@ type server struct {
 func NewServer(
 	enabled bool,
 	port int,
+	balancingType int,
 	serviceType string,
 	services ...string,
 ) *server {
@@ -40,6 +44,8 @@ func NewServer(
 		enabled:     enabled,
 		port:        port,
 		serviceType: serviceType,
+
+		balancingType: balancingType,
 
 		http:     http_client.NewClient(),
 		logger:   logger.NewLogger(),
