@@ -11,7 +11,13 @@ import (
 func (s *server) getOneIPFromServices() *service {
 	defer func() {
 		sort.Slice(s.services, func(i, j int) bool {
-			return s.services[i].used < s.services[j].used
+			if s.balancingType == 1 {
+				return s.services[i].used < s.services[j].used
+			} else if s.balancingType == 2 {
+				return s.services[i].busy < s.services[j].busy
+			} else {
+				return i < j
+			}
 		})
 	}()
 
