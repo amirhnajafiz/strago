@@ -44,3 +44,19 @@ func newMetrics() metrics {
 		}),
 	}
 }
+
+func (m *metrics) incRequest() {
+	m.numberOfRequests.Inc()
+}
+
+func (m *metrics) incRequestPer(ip string) {
+	m.numberOfRequestsPerService.With(prometheus.Labels{"ip": ip}).Inc()
+}
+
+func (m *metrics) incFailed() {
+	m.numberOfFailedRequests.Inc()
+}
+
+func (m *metrics) addResponse(duTime float64) {
+	m.responseTime.Set(duTime)
+}
