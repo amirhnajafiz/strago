@@ -3,6 +3,7 @@ package internal
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -29,6 +30,9 @@ func (s *server) handleRequests(ctx *gin.Context) {
 
 	s.logger.Info("load balancer given ip", zap.String("uri", uri))
 
+	// starting time
+	start := time.Now()
+
 	// handle the request with new uri
 	res, err := s.handle(uri, req)
 	if err != nil {
@@ -42,6 +46,9 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	// creating a buffer for body
 	buffer := make([]byte, 2048)
 	_, _ = res.Body.Read(buffer)
+
+	// logging the response time
+	s.logger.Info("response time", zap.Duration("duration", time.Since(start)))
 
 	// sending the service response
 	ctx.Status(res.StatusCode)
