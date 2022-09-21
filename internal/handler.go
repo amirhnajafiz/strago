@@ -22,8 +22,8 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	}
 
 	// load-balancing logic
-	ip := s.getOneIPFromServices()
-	if ip == "" {
+	selectedService := s.getOneIPFromServices()
+	if selectedService == nil {
 		s.logger.Warn("all services are disabled")
 
 		_ = ctx.Error(fmt.Errorf("services are closed at the moment"))
@@ -33,7 +33,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 
 	// extract request and create a new address
 	req := ctx.Request
-	uri := s.serviceType + "://" + ip + req.URL.Path
+	uri := s.serviceType + "://" + selectedService.ip + req.URL.Path
 
 	s.logger.Info("load balancer given ip", zap.String("uri", uri))
 
@@ -54,8 +54,12 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	buffer := make([]byte, 2048)
 	_, _ = res.Body.Read(buffer)
 
-	// logging the response time
-	s.logger.Info("response time", zap.Duration("duration", time.Since(start)))
+	// calculating the response time
+	duTime := time.Since(start)
+	// accumulate the busy times of a service
+	selectedService.busy = selectedService.busy + duTime
+
+	s.logger.Info("response time", zap.Duration("duration", duTime))
 
 	// sending the service response
 	ctx.Status(res.StatusCode)
