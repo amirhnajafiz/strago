@@ -9,13 +9,19 @@ import (
 // sorting type is based on number of requests, or
 // the busy time of a service.
 func (s *server) getOneIPFromServices() string {
-	serv := s.services[0]
+	defer func() {
+		sort.Slice(s.services, func(i, j int) bool {
+			return s.services[i].used < s.services[j].used
+		})
+	}()
 
-	serv.used++
+	for index := range s.services {
+		if s.services[index].enable {
+			s.services[index].used++
 
-	sort.Slice(s.services, func(i, j int) bool {
-		return s.services[i].used < s.services[j].used
-	})
+			return s.services[index].ip
+		}
+	}
 
-	return serv.ip
+	return ""
 }

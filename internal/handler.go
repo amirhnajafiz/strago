@@ -16,7 +16,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	if !s.enabled {
 		s.logger.Warn("request arrived when service was closed")
 
-		ctx.Status(http.StatusNotFound)
+		_ = ctx.Error(http.ErrServerClosed)
 
 		return
 	}
