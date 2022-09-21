@@ -12,6 +12,8 @@ import (
 // handleRequests
 // gets user inputs and processes them.
 func (s *server) handleRequests(ctx *gin.Context) {
+	s.metrics.incRequest()
+
 	// check service enable/disable status
 	if !s.enabled {
 		s.logger.Warn("request arrived when service was closed")
@@ -36,6 +38,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	uri := s.serviceType + "://" + selectedService.ip + req.URL.Path
 
 	s.logger.Info("load balancer given ip", zap.String("uri", uri))
+	s.metrics.incRequestPer(selectedService.ip)
 
 	// starting time
 	start := time.Now()
@@ -44,6 +47,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	res, err := s.handle(uri, req)
 	if err != nil {
 		s.logger.Error("handle request failed", zap.Error(err))
+		s.metrics.incFailed()
 
 		_ = ctx.Error(err)
 
@@ -60,6 +64,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	selectedService.busy = selectedService.busy + duTime
 
 	s.logger.Info("response time", zap.Duration("duration", duTime))
+	s.metrics.addResponse(duTime.Minutes())
 
 	// sending the service response
 	ctx.Status(res.StatusCode)
