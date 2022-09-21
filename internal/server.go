@@ -90,6 +90,7 @@ func (s *server) Start() error {
 	app := gin.Default()
 
 	app.Use(s.handleRequests)
+	app.GET("/metrics", s.prometheusHandler())
 
 	s.logger.Info("load balancer started", zap.String("port", address))
 
