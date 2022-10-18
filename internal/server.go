@@ -40,7 +40,6 @@ func NewServer(
 	port int,
 	balancingType int,
 	serviceType string,
-	services ...string,
 ) *server {
 	return &server{
 		enabled:     enabled,
@@ -49,10 +48,9 @@ func NewServer(
 
 		balancingType: balancingType,
 
-		metrics:  newMetrics(),
-		http:     http_client.NewClient(),
-		logger:   logger.NewLogger(),
-		services: generateServicesFromGiven(services),
+		metrics: newMetrics(),
+		http:    http_client.NewClient(),
+		logger:  logger.NewLogger(),
 	}
 }
 
@@ -66,6 +64,12 @@ func (s *server) Enable() {
 // block all the requests that are sent to server.
 func (s *server) Disable() {
 	s.enabled = false
+}
+
+// WithServices
+// adds services to strago server.
+func (s *server) WithServices(services ...string) {
+	s.services = generateServicesFromGiven(services)
 }
 
 // Open
