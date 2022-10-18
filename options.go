@@ -13,9 +13,15 @@ type Options struct {
 	BalancingType int
 }
 
-// WithDefaultOptions
+// NewOptions
+// returns one option instance.
+func NewOptions() *Options {
+	return &Options{}
+}
+
+// DefaultOptions
 // returns a default config set of strago.
-func WithDefaultOptions() *Options {
+func DefaultOptions() *Options {
 	return &Options{
 		Enable:        false,
 		Port:          9370,
