@@ -14,6 +14,8 @@ type LoadBalancer interface {
 	Enable()
 	// Disable load balancing server.
 	Disable()
+	// WithServices adds list of services to strago.
+	WithServices(services ...string)
 	// Open one of the services.
 	Open(ip string) error
 	// Close one of the services.
@@ -22,13 +24,12 @@ type LoadBalancer interface {
 
 // NewServer
 // creates a new load-balancer server.
-func NewServer(cfg *Config) LoadBalancer {
+func NewServer(opt *Options) LoadBalancer {
 	server := internal.NewServer(
-		cfg.Enable,
-		cfg.Port,
-		cfg.BalancingType,
-		cfg.Type,
-		cfg.Services...,
+		opt.Enable,
+		opt.Port,
+		opt.BalancingType,
+		opt.Type,
 	)
 
 	return server
