@@ -12,7 +12,8 @@ Strago
 </p>
 
 Simple traffic controller agent with Golang. With **Strago** you can create and config a load balancer
-for your services. Load balancer logic of **Strago** is very simple, it works by the number of requests per service.
+for your services. Load balancing logic of **Strago** is very simple, it works by the number of requests per service or the total burst time
+of requests in each service. 
 All you need to do is to give your service addresses as an IP and leave the rest up to **Strago**.
 
 ## How to use?
