@@ -1,4 +1,4 @@
-package strago
+package internal
 
 // Options
 // is strago server configs.

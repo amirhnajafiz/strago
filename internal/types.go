@@ -1,4 +1,4 @@
-package strago
+package internal
 
 const (
 	RequestsCount = iota + 1
