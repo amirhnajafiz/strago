@@ -14,15 +14,6 @@ import (
 func (s *server) handleRequests(ctx *gin.Context) {
 	s.metrics.IncRequest()
 
-	// check service enable/disable status
-	if !s.enabled {
-		s.logger.Warn("request arrived when service was closed")
-
-		_ = ctx.Error(http.ErrServerClosed)
-
-		return
-	}
-
 	// load-balancing logic
 	selectedService := s.getOneIPFromServices()
 	if selectedService == nil {
@@ -35,7 +26,13 @@ func (s *server) handleRequests(ctx *gin.Context) {
 
 	// extract request and create a new address
 	req := ctx.Request
-	uri := s.serviceType + "://" + selectedService.ip + req.URL.Path
+
+	prefix := "http"
+	if s.secure {
+		prefix = "https"
+	}
+
+	uri := prefix + "://" + selectedService.ip + req.URL.Path
 
 	s.logger.Info("load balancer given ip", zap.String("uri", uri))
 	s.metrics.IncRequestPer(selectedService.ip)

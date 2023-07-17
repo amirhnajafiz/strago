@@ -1,8 +1,6 @@
 package internal
 
-import (
-	"sort"
-)
+import "sort"
 
 // getOneIPFromServices
 // returns one ip address from given services.
@@ -23,11 +21,9 @@ func (s *server) getOneIPFromServices() *service {
 	}()
 
 	for index := range s.services {
-		if s.services[index].enable {
-			s.services[index].used++
+		s.services[index].used++
 
-			return s.services[index]
-		}
+		return s.services[index]
 	}
 
 	return nil
