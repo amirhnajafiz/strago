@@ -18,7 +18,7 @@ import (
 // features that a load-balancer has.
 type LoadBalancer interface {
 	// Start server.
-	Start() error
+	Start(debug bool) error
 	// WithServices adds list of services to strago.
 	WithServices(services ...string)
 }
@@ -72,9 +72,11 @@ func (s *server) WithServices(services ...string) {
 
 // Start
 // starting strago server.
-func (s *server) Start() error {
+func (s *server) Start(debug bool) error {
 	// change gin mode
-	gin.SetMode(gin.ReleaseMode)
+	if !debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
 
 	app := gin.Default()
 

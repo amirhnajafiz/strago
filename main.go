@@ -13,6 +13,7 @@ func main() {
 		port        = flag.Int("port", 8080, "http port")
 		secure      = flag.Bool("secure", false, "http secure or not")
 		balanceType = flag.Int("type", 1, "load balancing type (1 request / 2 busy time)")
+		debug       = flag.Bool("debug", true, "debug mode or not")
 	)
 
 	// parse flags
@@ -33,7 +34,7 @@ func main() {
 	server.WithServices(list...)
 
 	// start server
-	if err := server.Start(); err != nil {
+	if err := server.Start(*debug); err != nil {
 		panic(err)
 	}
 }
