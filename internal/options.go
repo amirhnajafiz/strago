@@ -4,8 +4,9 @@ package internal
 // is strago server configs.
 type Options struct {
 	Port          int
-	Secure        bool
 	BalancingType int
+	Secure        bool
+	Debug         bool
 }
 
 // NewOptions

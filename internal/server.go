@@ -18,7 +18,7 @@ import (
 // features that a load-balancer has.
 type LoadBalancer interface {
 	// Start server.
-	Start(debug bool) error
+	Start() error
 	// WithServices adds list of services to strago.
 	WithServices(services ...string)
 }
@@ -30,6 +30,7 @@ func NewServer(opt *Options) LoadBalancer {
 		opt.Port,
 		opt.BalancingType,
 		opt.Secure,
+		opt.Debug,
 	)
 
 	return server
@@ -41,6 +42,7 @@ type server struct {
 	balancingType int
 	port          int
 	secure        bool
+	debug         bool
 	metrics       metrics.Metrics
 	http          *client.HTTPClient
 	logger        *zap.Logger
@@ -50,17 +52,24 @@ type server struct {
 // NewServer
 // creates a new strago server.
 func newServer(
-	port int,
+	port,
 	balancingType int,
-	secure bool,
+	secure,
+	debug bool,
 ) *server {
+	level := zap.DebugLevel
+	if !debug {
+		level = zap.InfoLevel
+	}
+
 	return &server{
 		port:          port,
 		secure:        secure,
 		balancingType: balancingType,
+		debug:         debug,
 		metrics:       metrics.NewMetrics(),
 		http:          client.NewClient(),
-		logger:        logger.NewLogger(),
+		logger:        logger.NewLogger(level),
 	}
 }
 
@@ -72,9 +81,9 @@ func (s *server) WithServices(services ...string) {
 
 // Start
 // starting strago server.
-func (s *server) Start(debug bool) error {
+func (s *server) Start() error {
 	// change gin mode
-	if !debug {
+	if !s.debug {
 		gin.SetMode(gin.ReleaseMode)
 	}
 

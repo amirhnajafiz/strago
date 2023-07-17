@@ -9,9 +9,7 @@ import (
 
 // NewLogger
 // creates a new zap logger interface.
-func NewLogger() *zap.Logger {
-	level := zapcore.DebugLevel
-
+func NewLogger(level zapcore.Level) *zap.Logger {
 	encoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
 
 	defaultCore := zapcore.NewCore(encoder, zapcore.Lock(zapcore.AddSync(os.Stderr)), level)
@@ -21,7 +19,7 @@ func NewLogger() *zap.Logger {
 
 	core := zapcore.NewTee(cores...)
 
-	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(level))
 
 	return logger
 }

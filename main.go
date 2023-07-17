@@ -28,13 +28,14 @@ func main() {
 	config.Secure = *secure
 	config.Port = *port
 	config.BalancingType = *balanceType
+	config.Debug = *debug
 
 	// create new server
 	server := internal.NewServer(config)
 	server.WithServices(list...)
 
 	// start server
-	if err := server.Start(*debug); err != nil {
+	if err := server.Start(); err != nil {
 		panic(err)
 	}
 }
