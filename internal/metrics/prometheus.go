@@ -1,13 +1,13 @@
-package internal
+package metrics
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-// prometheusHandler
+// PrometheusHandler
 // generates the handler for prometheus.
-func (s *server) prometheusHandler() gin.HandlerFunc {
+func PrometheusHandler() gin.HandlerFunc {
 	h := promhttp.Handler()
 
 	return func(c *gin.Context) {

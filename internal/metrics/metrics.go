@@ -1,10 +1,10 @@
-package internal
+package metrics
 
 import "github.com/prometheus/client_golang/prometheus"
 
-// metrics
+// Metrics
 // holds the metrics of strago server.
-type metrics struct {
+type Metrics struct {
 	numberOfRequests           prometheus.Counter
 	numberOfFailedRequests     prometheus.Counter
 	numberOfRequestsPerService *prometheus.CounterVec
@@ -13,13 +13,13 @@ type metrics struct {
 
 const (
 	namespace = "strago"
-	subsystem = "monitoring"
+	subsystem = "strago"
 )
 
-// newMetrics
+// NewMetrics
 // returns a metrics struct to handle metrics of strago server.
-func newMetrics() metrics {
-	return metrics{
+func NewMetrics() Metrics {
+	return Metrics{
 		numberOfRequests: prometheus.NewCounter(prometheus.CounterOpts{
 			Namespace: namespace,
 			Subsystem: subsystem,
@@ -49,26 +49,26 @@ func newMetrics() metrics {
 	}
 }
 
-// incRequest
+// IncRequest
 // increase number of requests.
-func (m *metrics) incRequest() {
+func (m *Metrics) IncRequest() {
 	m.numberOfRequests.Inc()
 }
 
-// incRequestPer
+// IncRequestPer
 // increase number of requests for a service.
-func (m *metrics) incRequestPer(ip string) {
+func (m *Metrics) IncRequestPer(ip string) {
 	m.numberOfRequestsPerService.With(prometheus.Labels{"ip": ip}).Inc()
 }
 
-// incFailed
+// IncFailed
 // increase number of failed requests.
-func (m *metrics) incFailed() {
+func (m *Metrics) IncFailed() {
 	m.numberOfFailedRequests.Inc()
 }
 
-// addResponse
+// AddResponse
 // set a new response time.
-func (m *metrics) addResponse(duTime float64) {
+func (m *Metrics) AddResponse(duTime float64) {
 	m.responseTime.Set(duTime)
 }
