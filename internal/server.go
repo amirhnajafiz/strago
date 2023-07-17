@@ -74,6 +74,22 @@ func newServer(
 	}
 }
 
+// generateServicesFromGiven
+// creates the list of the services.
+func generateServicesFromGiven(services []string) []*service {
+	list := make([]*service, len(services))
+
+	for index, ip := range services {
+		list[index] = &service{
+			ip:   ip,
+			used: 0,
+			busy: 0,
+		}
+	}
+
+	return list
+}
+
 // WithServices
 // adds services to strago server.
 func (s *server) WithServices(services ...string) {
