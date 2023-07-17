@@ -17,7 +17,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	// load-balancing logic
 	selectedService := s.getOneIPFromServices()
 	if selectedService == nil {
-		s.logger.Warn("all services are disabled")
+		s.logger.Debug("all services are disabled")
 
 		_ = ctx.Error(fmt.Errorf("services are closed at the moment"))
 
@@ -43,7 +43,7 @@ func (s *server) handleRequests(ctx *gin.Context) {
 	// handle the request with new uri
 	res, err := s.handle(uri, req)
 	if err != nil {
-		s.logger.Error("handle request failed", zap.Error(err))
+		s.logger.Debug("handle request failed", zap.Error(err))
 		s.metrics.IncFailed()
 
 		_ = ctx.Error(err)
