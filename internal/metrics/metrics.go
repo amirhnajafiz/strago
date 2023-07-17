@@ -1,74 +1,48 @@
 package metrics
 
-import "github.com/prometheus/client_golang/prometheus"
-
 // Metrics
 // holds the metrics of strago server.
 type Metrics struct {
-	numberOfRequests           prometheus.Counter
-	numberOfFailedRequests     prometheus.Counter
-	numberOfRequestsPerService *prometheus.CounterVec
-	responseTime               prometheus.Gauge
+	numberOfRequests           int
+	numberOfFailedRequests     int
+	numberOfRequestsPerService map[string]int
+	responseTime               []float64
 }
-
-const (
-	namespace = "strago"
-	subsystem = "strago"
-)
 
 // NewMetrics
 // returns a metrics struct to handle metrics of strago server.
 func NewMetrics() Metrics {
 	return Metrics{
-		numberOfRequests: prometheus.NewCounter(prometheus.CounterOpts{
-			Namespace: namespace,
-			Subsystem: subsystem,
-			Name:      "number_of_requests",
-			Help:      "total number of requests that are sent to strago server",
-		}),
-		numberOfFailedRequests: prometheus.NewCounter(prometheus.CounterOpts{
-			Namespace: namespace,
-			Subsystem: subsystem,
-			Name:      "number_of_failed_requests",
-			Help:      "number of requests that are failed to process",
-		}),
-		numberOfRequestsPerService: prometheus.NewCounterVec(prometheus.CounterOpts{
-			Namespace: namespace,
-			Subsystem: subsystem,
-			Name:      "number_of_requests_per_service",
-			Help:      "total number of requests for each service",
-		}, []string{
-			"ip",
-		}),
-		responseTime: prometheus.NewGauge(prometheus.GaugeOpts{
-			Namespace: namespace,
-			Subsystem: subsystem,
-			Name:      "response_time",
-			Help:      "response time of strago service",
-		}),
+		numberOfRequests:           0,
+		numberOfFailedRequests:     0,
+		numberOfRequestsPerService: make(map[string]int),
 	}
 }
 
 // IncRequest
 // increase number of requests.
 func (m *Metrics) IncRequest() {
-	m.numberOfRequests.Inc()
+	m.numberOfRequests++
 }
 
 // IncRequestPer
 // increase number of requests for a service.
 func (m *Metrics) IncRequestPer(ip string) {
-	m.numberOfRequestsPerService.With(prometheus.Labels{"ip": ip}).Inc()
+	if _, ok := m.numberOfRequestsPerService[ip]; ok {
+		m.numberOfRequestsPerService[ip]++
+	} else {
+		m.numberOfRequestsPerService[ip] = 1
+	}
 }
 
 // IncFailed
 // increase number of failed requests.
 func (m *Metrics) IncFailed() {
-	m.numberOfFailedRequests.Inc()
+	m.numberOfFailedRequests++
 }
 
 // AddResponse
 // set a new response time.
 func (m *Metrics) AddResponse(duTime float64) {
-	m.responseTime.Set(duTime)
+	m.responseTime = append(m.responseTime, duTime)
 }
