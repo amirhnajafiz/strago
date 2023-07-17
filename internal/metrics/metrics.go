@@ -16,6 +16,7 @@ func NewMetrics() Metrics {
 		numberOfRequests:           0,
 		numberOfFailedRequests:     0,
 		numberOfRequestsPerService: make(map[string]int),
+		responseTime:               make([]float64, 0),
 	}
 }
 
