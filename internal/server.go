@@ -2,6 +2,7 @@ package internal
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 
 	"github.com/amirhnajafiz/strago/internal/metrics"
@@ -40,11 +41,10 @@ type server struct {
 	balancingType int
 	port          int
 	secure        bool
-
-	metrics  metrics.Metrics
-	http     *client.HTTPClient
-	logger   *zap.Logger
-	services []*service
+	metrics       metrics.Metrics
+	http          *client.HTTPClient
+	logger        *zap.Logger
+	services      []*service
 }
 
 // NewServer
@@ -64,6 +64,40 @@ func newServer(
 	}
 }
 
+// WithServices
+// adds services to strago server.
+func (s *server) WithServices(services ...string) {
+	s.services = generateServicesFromGiven(services)
+}
+
+// Start
+// starting strago server.
+func (s *server) Start() error {
+	// change gin mode
+	gin.SetMode(gin.ReleaseMode)
+
+	app := gin.Default()
+
+	app.GET("/metrics", s.metrics.Export)
+	app.GET("/health", func(context *gin.Context) {
+		context.Status(http.StatusOK)
+	})
+
+	app.Use(s.handleRequests)
+
+	s.logger.Info("load balancer started",
+		zap.Int("port", s.port),
+		zap.Bool("secure", s.secure),
+		zap.Int("type", s.balancingType),
+	)
+
+	if err := app.Run(":" + strconv.Itoa(s.port)); err != nil {
+		return fmt.Errorf("register server failed: %w", err)
+	}
+
+	return nil
+}
+
 // generateServicesFromGiven
 // creates the list of the services.
 func generateServicesFromGiven(services []string) []*service {
@@ -78,31 +112,4 @@ func generateServicesFromGiven(services []string) []*service {
 	}
 
 	return list
-}
-
-// WithServices
-// adds services to strago server.
-func (s *server) WithServices(services ...string) {
-	s.services = generateServicesFromGiven(services)
-}
-
-// Start
-// starting strago server.
-func (s *server) Start() error {
-	// change gin mode
-	gin.SetMode(gin.ReleaseMode)
-
-	address := ":" + strconv.Itoa(s.port)
-	app := gin.Default()
-
-	app.Use(s.handleRequests)
-	app.GET("/metrics", s.metrics.Export)
-
-	s.logger.Info("load balancer started", zap.String("port", address))
-
-	if err := app.Run(address); err != nil {
-		return fmt.Errorf("register server failed: %w", err)
-	}
-
-	return nil
 }
