@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/amirhnajafiz/strago/internal/metrics"
 	"github.com/amirhnajafiz/strago/pkg/http_client"
 	"github.com/amirhnajafiz/strago/pkg/logger"
 
@@ -17,23 +18,14 @@ import (
 type LoadBalancer interface {
 	// Start server.
 	Start() error
-	// Enable load balancing server.
-	Enable()
-	// Disable load balancing server.
-	Disable()
 	// WithServices adds list of services to strago.
 	WithServices(services ...string)
-	// Open one of the services.
-	Open(ip string) error
-	// Close one of the services.
-	Close(ip string) error
 }
 
 // NewServer
 // creates a new load-balancer server.
 func NewServer(opt *Options) LoadBalancer {
 	server := newServer(
-		opt.Enable,
 		opt.Port,
 		opt.BalancingType,
 		opt.Type,
@@ -45,8 +37,6 @@ func NewServer(opt *Options) LoadBalancer {
 // server
 // is the core of strago which manages the load-balancing.
 type server struct {
-	// enable/disable status.
-	enabled bool
 	// type of strago server.
 	serviceType string
 	// server port.
@@ -56,7 +46,7 @@ type server struct {
 	balancingType int
 
 	// metrics of the server.
-	metrics metrics
+	metrics metrics.Metrics
 	// http client instance.
 	http *http_client.HTTPClient
 	// logger instance.
@@ -68,52 +58,26 @@ type server struct {
 // NewServer
 // creates a new strago server.
 func newServer(
-	enabled bool,
 	port int,
 	balancingType int,
 	serviceType string,
 ) *server {
 	return &server{
-		enabled:     enabled,
 		port:        port,
 		serviceType: serviceType,
 
 		balancingType: balancingType,
 
-		metrics: newMetrics(),
+		metrics: metrics.NewMetrics(),
 		http:    http_client.NewClient(),
 		logger:  logger.NewLogger(),
 	}
-}
-
-// Enable
-// allow load balancing server to pass requests.
-func (s *server) Enable() {
-	s.enabled = true
-}
-
-// Disable
-// block all the requests that are sent to server.
-func (s *server) Disable() {
-	s.enabled = false
 }
 
 // WithServices
 // adds services to strago server.
 func (s *server) WithServices(services ...string) {
 	s.services = generateServicesFromGiven(services)
-}
-
-// Open
-// allow strago to send requests to a service.
-func (s *server) Open(ip string) error {
-	return s.changeStatusForAService(ip, true)
-}
-
-// Close
-// disallow strago to send requests to a service.
-func (s *server) Close(ip string) error {
-	return s.changeStatusForAService(ip, false)
 }
 
 // Start
@@ -126,7 +90,7 @@ func (s *server) Start() error {
 	app := gin.Default()
 
 	app.Use(s.handleRequests)
-	app.GET("/metrics", s.prometheusHandler())
+	app.GET("/metrics", s.metrics.Export)
 
 	s.logger.Info("load balancer started", zap.String("port", address))
 
