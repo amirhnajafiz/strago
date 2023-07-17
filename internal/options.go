@@ -1,14 +1,14 @@
 package internal
 
+import "github.com/amirhnajafiz/strago/pkg/model"
+
 // Options
 // is strago server configs.
 type Options struct {
-	// Enable server or disable it.
-	Enable bool
-	// Server Port.
+	// Port of http server.
 	Port int
-	// Service Type which can be http or https.
-	Type string
+	// Secure Type which can be http or https.
+	Secure bool
 	// BalancingType selects the parameter to balance services.
 	BalancingType int
 }
@@ -23,10 +23,9 @@ func NewOptions() *Options {
 // returns a default config set of strago.
 func DefaultOptions() *Options {
 	return &Options{
-		Enable:        false,
 		Port:          9370,
-		Type:          "http",
-		BalancingType: RequestsCount,
+		Secure:        false,
+		BalancingType: model.RequestsCount,
 	}
 }
 
@@ -34,9 +33,8 @@ func DefaultOptions() *Options {
 // returns a set of configs for production of strago server.
 func ProductionOptions() *Options {
 	return &Options{
-		Enable:        true,
 		Port:          9370,
-		Type:          "https",
-		BalancingType: BusyTime,
+		Secure:        true,
+		BalancingType: model.BusyTime,
 	}
 }

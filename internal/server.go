@@ -28,7 +28,7 @@ func NewServer(opt *Options) LoadBalancer {
 	server := newServer(
 		opt.Port,
 		opt.BalancingType,
-		opt.Type,
+		opt.Secure,
 	)
 
 	return server
@@ -37,21 +37,13 @@ func NewServer(opt *Options) LoadBalancer {
 // server
 // is the core of strago which manages the load-balancing.
 type server struct {
-	// type of strago server.
-	serviceType string
-	// server port.
-	port int
-
-	// balancing type.
 	balancingType int
+	port          int
+	secure        bool
 
-	// metrics of the server.
-	metrics metrics.Metrics
-	// http client instance.
-	http *client.HTTPClient
-	// logger instance.
-	logger *zap.Logger
-	// list of the services.
+	metrics  metrics.Metrics
+	http     *client.HTTPClient
+	logger   *zap.Logger
 	services []*service
 }
 
@@ -60,17 +52,15 @@ type server struct {
 func newServer(
 	port int,
 	balancingType int,
-	serviceType string,
+	secure bool,
 ) *server {
 	return &server{
-		port:        port,
-		serviceType: serviceType,
-
+		port:          port,
+		secure:        secure,
 		balancingType: balancingType,
-
-		metrics: metrics.NewMetrics(),
-		http:    client.NewClient(),
-		logger:  logger.NewLogger(),
+		metrics:       metrics.NewMetrics(),
+		http:          client.NewClient(),
+		logger:        logger.NewLogger(),
 	}
 }
 
