@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/amirhnajafiz/strago/internal/metrics"
-	"github.com/amirhnajafiz/strago/pkg/http_client"
+	"github.com/amirhnajafiz/strago/pkg/client"
 	"github.com/amirhnajafiz/strago/pkg/logger"
 
 	"github.com/gin-gonic/gin"
@@ -48,7 +48,7 @@ type server struct {
 	// metrics of the server.
 	metrics metrics.Metrics
 	// http client instance.
-	http *http_client.HTTPClient
+	http *client.HTTPClient
 	// logger instance.
 	logger *zap.Logger
 	// list of the services.
@@ -69,7 +69,7 @@ func newServer(
 		balancingType: balancingType,
 
 		metrics: metrics.NewMetrics(),
-		http:    http_client.NewClient(),
+		http:    client.NewClient(),
 		logger:  logger.NewLogger(),
 	}
 }
