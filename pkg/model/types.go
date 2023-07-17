@@ -1,10 +1,5 @@
 package model
 
-const (
-	RequestsCount = iota + 1
-	BusyTime
-)
-
 type (
 	// ExportMetrics is used in order to send current metrics.
 	ExportMetrics struct {
