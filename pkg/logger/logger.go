@@ -19,7 +19,7 @@ func NewLogger(level zapcore.Level) *zap.Logger {
 
 	core := zapcore.NewTee(cores...)
 
-	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(level))
+	logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.ErrorLevel))
 
 	return logger
 }

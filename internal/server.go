@@ -83,9 +83,7 @@ func (s *server) WithServices(services ...string) {
 // starting strago server.
 func (s *server) Start() error {
 	// change gin mode
-	if !s.debug {
-		gin.SetMode(gin.ReleaseMode)
-	}
+	gin.SetMode(gin.ReleaseMode)
 
 	app := gin.Default()
 
