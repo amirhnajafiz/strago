@@ -1,4 +1,4 @@
-package model
+package response
 
 type (
 	// ExportMetrics is used in order to send current metrics.
