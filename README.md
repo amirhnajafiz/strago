@@ -60,6 +60,14 @@ Now you can test the load-balancer:
 curl localhost:9370
 ```
 
+## Flags
+
+- ```services```: seperated with ```&```. Example: ```--services '127.0.0.1:5050&127.0.0.1:5051'```
+- ```port```: http port
+- ```secure```: using https or not
+- ```type```: load balancing type (1 is request count / 2 is burst time)
+- ```debug```: used for debug mode
+
 ## Metrics & Health
 
 Strago metrics will be exposed on ```localhost:9370/metrics```. And you can check the system
