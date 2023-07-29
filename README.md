@@ -73,7 +73,7 @@ curl localhost:9370
 - ```STRAGO_SERVICES```: seperated with ```&```. Example: ```127.0.0.1:5050&127.0.0.1:5051```
 - ```STRAGO_PORT```: http port
 - ```STRAGO_SECURE```: using https or not (ture/false)
-- ```STRAGO_TYPE```: load balancing type (1 is request count / 2 is burst time)
+- ```STRAGO_TYPE```: load balancing type (0 is request count / 1 is burst time)
 - ```STRAGO_DEBUG```: used for debug mode (true/false)
 
 ## Metrics & Health
