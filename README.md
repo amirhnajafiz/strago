@@ -8,7 +8,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/Go-1.20-00ADD8?style=for-the-badge&logo=go" alt="go version" />
-    <img src="https://img.shields.io/badge/Version-0.1.0-green?style=for-the-badge&logo=github" alt="version" />
+    <img src="https://img.shields.io/badge/Version-0.1.1-green?style=for-the-badge&logo=github" alt="version" />
 </p>
 
 Simple traffic controller agent with Golang. With **Strago** you can create and config a load balancer
@@ -31,17 +31,25 @@ Then build the executable file:
 ```shell
 go build -o strago
 chmod +x ./strago
+STRAGO_PORT=9370 STRAGO_SERVICES='127.0.0.1:5050&127.0.0.1:5051' STRAGO_DEBUG=true ./main
 ```
 
-### example
+### docker
+
+Start strago on docker with:
+
+```shell
+docker pull amirhossein21/strago:v0.1.1
+docker run -d \
+  -e STRAGO_PORT=9370 \
+  -e STRAGO_SERVICES='127.0.0.1:5050&127.0.0.1:5051' \
+  amirhossein21/strago:v0.1.1
+```
+
+## Example
 
 If you set two _echo servers_ on localhost ports ```5050 and 5051```, then
 you have to set the strago server like the example below:
-
-```shell
-
-./main --port 9000 --services '127.0.0.1:5050&127.0.0.1:5051' --debug true
-```
 
 ### test
 
