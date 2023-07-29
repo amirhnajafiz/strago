@@ -31,7 +31,7 @@ Then build the executable file:
 ```shell
 go build -o strago
 chmod +x ./strago
-STRAGO_PORT=9370 STRAGO_SERVICES='127.0.0.1:5050&127.0.0.1:5051' STRAGO_DEBUG=true ./main
+STRAGO_PORT=9370 STRAGO_SERVICES='127.0.0.1:5050&127.0.0.1:5051' STRAGO_DEBUG=true ./strago
 ```
 
 ### docker
