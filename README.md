@@ -60,13 +60,13 @@ Now you can test the load-balancer:
 curl localhost:9370
 ```
 
-## Flags
+## Envs
 
-- ```services```: seperated with ```&```. Example: ```--services '127.0.0.1:5050&127.0.0.1:5051'```
-- ```port```: http port
-- ```secure```: using https or not
-- ```type```: load balancing type (1 is request count / 2 is burst time)
-- ```debug```: used for debug mode
+- ```STRAGO_SERVICES```: seperated with ```&```. Example: ```127.0.0.1:5050&127.0.0.1:5051```
+- ```STRAGO_PORT```: http port
+- ```STRAGO_SECURE```: using https or not (ture/false)
+- ```STRAGO_TYPE```: load balancing type (1 is request count / 2 is burst time)
+- ```STRAGO_DEBUG```: used for debug mode (true/false)
 
 ## Metrics & Health
 
