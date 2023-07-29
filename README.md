@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-Strago
+    Strago
 </h1>
 
 <p align="center">
