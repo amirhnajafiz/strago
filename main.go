@@ -1,34 +1,51 @@
 package main
 
 import (
-	"flag"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/amirhnajafiz/strago/internal"
 )
 
-func main() {
-	var (
-		services    = flag.String("services", "", "list of services")
-		port        = flag.Int("port", 8080, "http port")
-		secure      = flag.Bool("secure", false, "http secure or not")
-		balanceType = flag.Int("type", 1, "load balancing type (1 request / 2 busy time)")
-		debug       = flag.Bool("debug", true, "debug mode or not")
-	)
+var (
+	Services    string
+	Port        int
+	Secure      bool
+	BalanceType int
+	Debug       bool
+)
 
-	// parse flags
-	flag.Parse()
+func readEnv() {
+	Services = os.Getenv("STRAGO_SERVICES")
+	Port, _ = strconv.Atoi(os.Getenv("STRAGO_PORT"))
+	BalanceType, _ = strconv.Atoi(os.Getenv("STRAGO_TYPE"))
+
+	tmp := os.Getenv("STRAGO_SECURE")
+	if tmp == "true" {
+		Secure = true
+	}
+
+	tmp = os.Getenv("STRAGO_DEBUG")
+	if tmp == "true" {
+		Debug = true
+	}
+}
+
+func main() {
+	// get env variables
+	readEnv()
 
 	// list the services
-	list := strings.Split(*services, "&")
+	list := strings.Split(Services, "&")
 
 	// create a new config
 	config := internal.NewOptions()
 
-	config.Secure = *secure
-	config.Port = *port
-	config.BalancingType = *balanceType
-	config.Debug = *debug
+	config.Secure = Secure
+	config.Port = Port
+	config.BalancingType = BalanceType
+	config.Debug = Debug
 
 	// create new server
 	server := internal.NewServer(config)
